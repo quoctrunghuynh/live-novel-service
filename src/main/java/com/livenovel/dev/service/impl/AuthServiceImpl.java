@@ -23,14 +23,14 @@ import java.time.LocalDateTime;
 @Transactional
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+    private final JwtService jwtService;
 
     @Override
     public ResponseDto register(RegisterRequest registerRequest) {
-        var user = User.builder()
+        User user = User.builder()
                 .username(registerRequest.getUsername())
                 .password(passwordEncoder.encode(registerRequest.getPassword()))
                 .displayName(registerRequest.getDisplayName())
@@ -40,14 +40,9 @@ public class AuthServiceImpl implements AuthService {
                 .build();
         userRepository.save(user);
         var jwtToken = jwtService.generateToken(user);
-        return ResponseDto.builder()
-                .status("200")
-                .message("User register success")
-                .data(AuthenticationResponse.builder()
-                        .token(jwtToken)
-                        .build())
-                .build();
-
+        return ResponseDto
+                .getInstance()
+                .getSuccessResponseDtoWithData(jwtToken);
     }
 
     @Override
@@ -63,19 +58,14 @@ public class AuthServiceImpl implements AuthService {
                         () -> new UsernameNotFoundException("Username not exist or deleted")
                 );
         if (user == null) {
-            return ResponseDto.builder()
-                    .status("404")
-                    .message("Get user's token failed, user not exist or deleted")
-                    .data(null)
-                    .build();
+            return ResponseDto.getInstance().getFailResponseDto();
         }
         var jwtToken = jwtService.generateToken(user);
-        return ResponseDto.builder()
-                .status("200")
-                .message("Get user's token success")
-                .data(AuthenticationResponse.builder()
-                        .token(jwtToken)
-                        .build())
-                .build();
+
+        return ResponseDto
+                .getInstance()
+                .getSuccessResponseDtoWithData(AuthenticationResponse.builder()
+                .token(jwtToken)
+                .build());
     }
 }

@@ -33,11 +33,7 @@ public class UserServiceImpl implements UserService {
         if (userInCache == null) {
             Optional<User> userData = userRepository.findUserByIdAndIsDeletedIsFalse(id);
             if (userData.isEmpty()) {
-                return ResponseDto.builder()
-                        .status("200")
-                        .message("User not found! Please try again later.")
-                        .data(false)
-                        .build();
+                return ResponseDto.getInstance().getFailResponseDto();
             } else {
                 UserDto userDtoInRepository = userData.map(
                         user -> UserDto.builder()
@@ -46,10 +42,10 @@ public class UserServiceImpl implements UserService {
                                 .createdAt(user.getCreatedAt())
                                 .build()).orElse(null);
                 redisRepository.saveUserDto(userDtoInRepository);
-                return userDtoInRepository;
+                return ResponseDto.getInstance().getSuccessResponseDtoWithData(userDtoInRepository);
             }
         }
-        return objectMapper.convertValue(userInCache, UserDto.class);
+        return ResponseDto.getInstance().getSuccessResponseDtoWithData(objectMapper.convertValue(userInCache, UserDto.class));
     }
 
     @Override
@@ -63,17 +59,9 @@ public class UserServiceImpl implements UserService {
             user.setDisplayName(userUpdateRequest.getDisplayName());
             userRepository.save(user);
             redisRepository.updateUserDtoByUser(user);
-            return ResponseDto.builder()
-                    .status("200")
-                    .message("User updated successfully!")
-                    .data(true)
-                    .build();
+            return ResponseDto.getInstance().getSuccessResponseDtoWithData(true);
         }
-        return ResponseDto.builder()
-                .status("400")
-                .message("User updated failed")
-                .data(false)
-                .build();
+        return ResponseDto.getInstance().getFailResponseDto();
     }
 
     @Override
@@ -86,17 +74,9 @@ public class UserServiceImpl implements UserService {
                 user.setIsDeleted(true);
                 userRepository.save(user);
                 redisRepository.deleteUserDtoByUser(user);
-                return ResponseDto.builder()
-                        .status("200")
-                        .message("User deleted successfully!")
-                        .data(true)
-                        .build();
+                return ResponseDto.getInstance().getSuccessResponseDtoWithData(true);
             }
         }
-        return ResponseDto.builder()
-                .status("400")
-                .message("User not found or has been deleted!")
-                .data(false)
-                .build();
+        return ResponseDto.getInstance().getFailResponseDto();
     }
 }

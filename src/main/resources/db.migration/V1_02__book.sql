@@ -9,18 +9,3 @@ CREATE TABLE IF NOT EXISTS book(
     user_id bigint,
     foreign key (user_id) REFERENCES user (id)
 );
-
-insert into book(title,
-                 content,
-                 update_at,
-                 created_at,
-                 is_deleted,
-                 user_id)
-values (
-        'The play has begun',
-        'I got ADHD',
-        '2090-12-31 00:59:00',
-        '2023-12-31 00:41:07',
-        0,
-        1
-);

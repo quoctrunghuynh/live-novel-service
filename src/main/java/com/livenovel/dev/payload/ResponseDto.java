@@ -5,14 +5,20 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class ResponseDto {
     private String message;
     private String status;
     private Object data;
+
+    private static final ResponseDto instance = new ResponseDto();
+
+    public static ResponseDto getInstance() {
+        return instance;
+    }
 
     public ResponseDto getSuccessResponseDtoWithData(Object data){
         return ResponseDto.builder()

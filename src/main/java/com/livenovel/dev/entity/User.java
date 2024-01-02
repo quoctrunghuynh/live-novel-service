@@ -30,8 +30,8 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String username; //Allow phone number/email/username
-    private String password; //Allow AAaa123.,?><:"{}][\=-_+|;'
+    private String username;
+    private String password;
     private String displayName;
     private LocalDateTime createdAt;
     private Boolean isDeleted;
