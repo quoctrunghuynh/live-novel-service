@@ -1,4 +1,4 @@
-package com.livenovel.dev.payload.user.response;
+package com.livenovel.dev.payload.book;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.redis.core.RedisHash;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Getter
@@ -15,10 +16,11 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @RedisHash("BookDto")
-public class BookDto {
+public class BookDto implements Serializable {
     private Long id;
     private String title;
     private String content;
     private LocalDateTime updateAt;
     private LocalDateTime createdAt;
+    private Long userId;
 }

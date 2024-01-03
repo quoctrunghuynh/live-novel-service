@@ -1,6 +1,5 @@
-package com.livenovel.dev.payload.user.request;
+package com.livenovel.dev.payload.book.request;
 
-import com.livenovel.dev.payload.user.response.BookDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

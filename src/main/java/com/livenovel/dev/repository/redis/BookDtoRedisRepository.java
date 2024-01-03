@@ -1,13 +1,13 @@
 package com.livenovel.dev.repository.redis;
 
 import com.livenovel.dev.entity.Book;
-import com.livenovel.dev.payload.user.response.BookDto;
+import com.livenovel.dev.payload.book.BookDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
-@Repository
+@Repository("BookDtoRedis")
 @RequiredArgsConstructor
 public class BookDtoRedisRepository {
     public final static String KEY = "BookDto";

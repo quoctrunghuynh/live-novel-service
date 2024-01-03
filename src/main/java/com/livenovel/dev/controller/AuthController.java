@@ -5,6 +5,7 @@ import com.livenovel.dev.payload.user.request.AuthenticateRequest;
 import com.livenovel.dev.payload.user.request.RegisterRequest;
 import com.livenovel.dev.service.interf.AuthService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,7 +21,7 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<ResponseDto> register (@RequestBody RegisterRequest registerRequest){
-        return ResponseEntity.ok(authService.register(registerRequest));
+            return ResponseEntity.ok(authService.register(registerRequest));
     }
 
     @PostMapping("/authenticate")

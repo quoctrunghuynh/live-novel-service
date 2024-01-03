@@ -7,7 +7,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
-@Repository
+@Repository("UserDtoRedis")
 @RequiredArgsConstructor
 public class UserDtoRedisRepository {
     public final static String KEY = "UserDto";

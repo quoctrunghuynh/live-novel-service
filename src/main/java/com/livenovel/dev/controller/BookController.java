@@ -1,10 +1,11 @@
 package com.livenovel.dev.controller;
 
 import com.livenovel.dev.payload.ResponseDto;
-import com.livenovel.dev.payload.user.request.BookDeleteRequest;
-import com.livenovel.dev.payload.user.response.BookDto;
+import com.livenovel.dev.payload.book.request.BookDeleteRequest;
+import com.livenovel.dev.payload.book.BookDto;
 import com.livenovel.dev.service.interf.BookService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,6 +43,11 @@ public class BookController {
         if(bookDeleteRequest.getConfirm().equals(deleteConfirm)){
             return ResponseEntity.ok(bookService.deleteBook(bookDeleteRequest.getId()));
         }
-        return ResponseEntity.ok(ResponseDto.getInstance().getFailResponseDto());
+        return ResponseEntity.ok(ResponseDto
+                .builder()
+                .status(HttpStatus.BAD_REQUEST)
+                .message("Failed")
+                .data(false)
+                .build());
     }
 }

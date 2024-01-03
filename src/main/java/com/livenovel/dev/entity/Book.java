@@ -1,7 +1,9 @@
 package com.livenovel.dev.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -21,7 +23,7 @@ import java.time.LocalDateTime;
 @Entity
 public class Book {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
     private String content;
@@ -30,9 +32,7 @@ public class Book {
     private Boolean isDeleted;
 
     @ManyToOne
-    @JoinColumn(
-            name = "user_id",
-            nullable = false,
+    @JoinColumn(name = "user_id",
             referencedColumnName = "id")
     private User user;
 }

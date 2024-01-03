@@ -1,7 +1,7 @@
 package com.livenovel.dev.service.interf;
 
 import com.livenovel.dev.payload.ResponseDto;
-import com.livenovel.dev.payload.user.response.BookDto;
+import com.livenovel.dev.payload.book.BookDto;
 
 public interface BookService {
     ResponseDto getById(Long id);
