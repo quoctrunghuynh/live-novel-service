@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -32,15 +31,12 @@ public class BookServiceImpl implements BookService {
     public ResponseDto getById(Long id) {
         Object bookInCache = redisRepository.findBookDtoWithId(id);
         if (bookInCache == null) {
-            Optional<Book> book = bookRepository.findBookByIdAndIsDeletedIsFalse(id);
-            if (book.isEmpty()) {
+            Book book = bookRepository.findBookByIdAndIsDeletedIsFalse(id).orElse(null);
+            if (book == null) {
                 return responseDtoBuilder.build("Failed", false, HttpStatus.BAD_REQUEST);
             } else {
                 BookDto bookDto = bookConverter.convert(book);
                 redisRepository.saveBookDto(bookDto);
-                if (bookDto == null) {
-                    return responseDtoBuilder.build("Failed", false, HttpStatus.BAD_REQUEST);
-                }
                 return responseDtoBuilder.build("Success", bookDto, HttpStatus.OK);
             }
         }
@@ -53,12 +49,12 @@ public class BookServiceImpl implements BookService {
         book.setCreatedAt(LocalDateTime.now());
         book.setUpdateAt(LocalDateTime.now());
         book.setIsDeleted(false);
-        book.setUser(userRepository.findById(bookDto.getUserId()).orElse(null));
+        book.setUser(userRepository.findUserByIdAndIsDeletedIsFalse(bookDto.getUserId()).orElse(null));
         if (book.getUser() != null) {
             bookRepository.save(book);
             BookDto savedBookDto = bookConverter.convert(book);
             redisRepository.saveBookDto(savedBookDto);
-            return responseDtoBuilder.build("Success", book, HttpStatus.OK);
+            return responseDtoBuilder.build("Success", savedBookDto, HttpStatus.OK);
         } else {
             return responseDtoBuilder.build("Failed", false, HttpStatus.BAD_REQUEST);
         }
@@ -66,28 +62,22 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public ResponseDto updateBook(BookDto bookDto) {
-        Book book = bookRepository
-                .findBookByIdAndIsDeletedIsFalse(bookDto.getId()).stream()
-                .findFirst()
-                .orElse(null);
+        Book book = bookRepository.findBookByIdAndIsDeletedIsFalse(bookDto.getId()).orElse(null);
         if (book != null) {
             book.setTitle(bookDto.getTitle());
             book.setContent(bookDto.getContent());
             book.setUpdateAt(LocalDateTime.now());
-            book.setCreatedAt(bookDto.getCreatedAt());
+            BookDto edittedBookDto = bookConverter.convert(book);
             bookRepository.save(book);
-            redisRepository.saveBookDto(bookDto);
-            return responseDtoBuilder.build("Success", true, HttpStatus.OK);
+            redisRepository.saveBookDto(edittedBookDto);
+            return responseDtoBuilder.build("Success", edittedBookDto, HttpStatus.OK);
         }
         return responseDtoBuilder.build("Failed", false, HttpStatus.BAD_REQUEST);
     }
 
     @Override
     public ResponseDto deleteBook(Long id) {
-        Book book = bookRepository
-                .findBookByIdAndIsDeletedIsFalse(id).stream()
-                .findFirst()
-                .orElse(null);
+        Book book = bookRepository.findBookByIdAndIsDeletedIsFalse(id).orElse(null);
         if (book != null) {
             book.setIsDeleted(true);
             bookRepository.save(book);
