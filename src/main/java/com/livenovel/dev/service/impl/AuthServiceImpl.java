@@ -1,6 +1,5 @@
 package com.livenovel.dev.service.impl;
 
-import com.livenovel.dev.builder.ResponseDtoBuilder;
 import com.livenovel.dev.configuration.security.JwtService;
 import com.livenovel.dev.entity.Role;
 import com.livenovel.dev.entity.User;
@@ -11,7 +10,6 @@ import com.livenovel.dev.payload.user.response.AuthenticationResponse;
 import com.livenovel.dev.repository.UserRepository;
 import com.livenovel.dev.service.interf.AuthService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -26,7 +24,6 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
     private final AuthenticationManager authenticationManager;
-    private final ResponseDtoBuilder responseDtoBuilder;
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final JwtService jwtService;
@@ -42,8 +39,12 @@ public class AuthServiceImpl implements AuthService {
                 .role(Role.USER)
                 .build();
         var jwtToken = jwtService.generateToken(user);
-        userRepository.save(user);
-        return responseDtoBuilder.build("Success", jwtToken, HttpStatus.OK);
+        if (jwtToken == null) {
+            return ResponseDto.getDefaultFailed(false);
+        } else {
+            userRepository.save(user);
+            return ResponseDto.getDefaultSucceed(jwtToken);
+        }
     }
 
     @Override
@@ -59,13 +60,13 @@ public class AuthServiceImpl implements AuthService {
                         () -> new UsernameNotFoundException("Username not exist or deleted")
                 );
         if (user == null) {
-            return responseDtoBuilder.build("Success", false, HttpStatus.BAD_REQUEST);
+            return ResponseDto.getDefaultFailed(false);
         }
         var jwtToken = jwtService.generateToken(user);
-        return responseDtoBuilder.build("Success",
+        return ResponseDto.getDefaultSucceed(
                 AuthenticationResponse.builder()
-                        .token(jwtToken)
-                        .build(),
-                HttpStatus.OK);
+                .token(jwtToken)
+                .build()
+        );
     }
 }

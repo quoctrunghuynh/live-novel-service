@@ -1,6 +1,5 @@
 package com.livenovel.dev.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -21,7 +20,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Book {
+public class Novel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

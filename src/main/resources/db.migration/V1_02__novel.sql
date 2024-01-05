@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS book(
+CREATE TABLE IF NOT EXISTS novel(
     id bigint PRIMARY KEY AUTO_INCREMENT,
     title varchar(255),
     content text,

@@ -1,4 +1,4 @@
-package com.livenovel.dev.payload.book;
+package com.livenovel.dev.payload.novel;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,8 +15,8 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@RedisHash("BookDto")
-public class BookDto implements Serializable {
+@RedisHash("NovelDto")
+public class NovelDto implements Serializable {
     private Long id;
     private String title;
     private String content;

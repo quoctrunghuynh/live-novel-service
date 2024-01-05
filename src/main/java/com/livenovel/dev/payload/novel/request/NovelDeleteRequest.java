@@ -1,4 +1,4 @@
-package com.livenovel.dev.payload.book.request;
+package com.livenovel.dev.payload.novel.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class BookDeleteRequest {
+public class NovelDeleteRequest {
     private Long id;
     private String confirm;
 }

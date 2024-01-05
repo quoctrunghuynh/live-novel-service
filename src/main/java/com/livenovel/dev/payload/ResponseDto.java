@@ -14,4 +14,20 @@ public class ResponseDto {
     private HttpStatus status;
     private String message;
     private Object data;
+
+    public static ResponseDto getDefaultSucceed(Object data) {
+        return ResponseDto.builder()
+                .status(HttpStatus.OK)
+                .message("Success")
+                .data(data)
+                .build();
+    }
+
+    public static ResponseDto getDefaultFailed(Object data) {
+        return ResponseDto.builder()
+                .status(HttpStatus.BAD_REQUEST)
+                .message("Failed")
+                .data(data)
+                .build();
+    }
 }

@@ -1,16 +1,12 @@
 package com.livenovel.dev.entity;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -42,7 +38,7 @@ public class User implements UserDetails {
 
 
     @OneToMany(mappedBy = "user")
-    private List<Book> bookList;
+    private List<Novel> novelList;
 
     @Enumerated(EnumType.STRING)
     private Role role;

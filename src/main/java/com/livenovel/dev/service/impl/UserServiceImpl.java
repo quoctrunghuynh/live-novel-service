@@ -1,7 +1,6 @@
 package com.livenovel.dev.service.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.livenovel.dev.builder.ResponseDtoBuilder;
 import com.livenovel.dev.configuration.security.JwtAuthenticationFilter;
 import com.livenovel.dev.configuration.security.JwtService;
 import com.livenovel.dev.entity.User;
@@ -13,7 +12,6 @@ import com.livenovel.dev.repository.redis.UserDtoRedisRepository;
 import com.livenovel.dev.service.interf.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,7 +23,6 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final UserDtoRedisRepository redisRepository;
-    private final ResponseDtoBuilder responseDtoBuilder;
     private final UserRepository userRepository;
     private final ObjectMapper objectMapper;
     private final JwtService jwtService;
@@ -36,7 +33,7 @@ public class UserServiceImpl implements UserService {
         if (userInCache == null) {
             Optional<User> userData = userRepository.findUserByIdAndIsDeletedIsFalse(id);
             if (userData.isEmpty()) {
-                return responseDtoBuilder.build("Failed", false, HttpStatus.BAD_REQUEST);
+                return ResponseDto.getDefaultFailed(false);
             } else {
                 UserDto userDtoInRepository = userData.map(
                         user -> UserDto.builder()
@@ -45,15 +42,10 @@ public class UserServiceImpl implements UserService {
                                 .createdAt(user.getCreatedAt())
                                 .build()).orElse(null);
                 redisRepository.saveUserDto(userDtoInRepository);
-                return responseDtoBuilder.build("Success", userDtoInRepository, HttpStatus.OK);
+                return ResponseDto.getDefaultSucceed(userDtoInRepository);
             }
         }
-        return responseDtoBuilder
-                .build(
-                        "Success",
-                        objectMapper.convertValue(userInCache, UserDto.class),
-                        HttpStatus.OK
-                );
+        return ResponseDto.getDefaultSucceed(objectMapper.convertValue(userInCache, UserDto.class));
     }
 
     @Override
@@ -67,12 +59,9 @@ public class UserServiceImpl implements UserService {
             user.setDisplayName(userUpdateRequest.getDisplayName());
             userRepository.save(user);
             redisRepository.updateUserDtoByUser(user);
-            return responseDtoBuilder
-                    .build("Success", true, HttpStatus.OK);
+            return ResponseDto.getDefaultSucceed(true);
         }
-        return responseDtoBuilder
-                .build("Failed", false, HttpStatus.BAD_REQUEST
-                );
+        return ResponseDto.getDefaultFailed(false);
     }
 
     @Override
@@ -85,10 +74,9 @@ public class UserServiceImpl implements UserService {
                 user.setIsDeleted(true);
                 userRepository.save(user);
                 redisRepository.deleteUserDtoByUser(user);
-                return responseDtoBuilder.build("Success", true, HttpStatus.OK);
+                return ResponseDto.getDefaultSucceed(true);
             }
         }
-        return responseDtoBuilder
-                .build("Failed", false, HttpStatus.BAD_REQUEST);
+        return ResponseDto.getDefaultFailed(false);
     }
 }

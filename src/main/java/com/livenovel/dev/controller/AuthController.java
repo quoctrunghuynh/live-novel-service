@@ -5,7 +5,6 @@ import com.livenovel.dev.payload.user.request.AuthenticateRequest;
 import com.livenovel.dev.payload.user.request.RegisterRequest;
 import com.livenovel.dev.service.interf.AuthService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
